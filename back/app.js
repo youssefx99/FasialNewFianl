@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin: ["https://fasial-new-fianl.vercel.app/"],
     credentials: true, // Allow cookies to be sent an d received
   })
 );

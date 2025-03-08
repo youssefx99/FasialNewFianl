@@ -31,11 +31,14 @@ app.use("/api/", userRoute);
 
 // Serve React frontend correctly
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "client", "index.html"), (err) => {
-    if (err) {
-      res.status(500).send("Something went wrong!");
-    }
-  });
+  if (!req.path.startsWith("/api") && !req.path.startsWith("/uploads")) {
+    res.sendFile(path.resolve(__dirname, "client", "index.html"));
+  } else {
+    res.status(404).json({
+      success: false,
+      message: "Not Found",
+    });
+  }
 });
 
 

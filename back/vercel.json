@@ -2,13 +2,13 @@
   "version": 2,
   "builds": [
     {
-      "src": "*.js",
+      "src": "back/app.js",
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    { "src": "/api/.*", "dest": "/app.js" },
-    { "src": "/uploads/(.*)", "dest": "/uploads/$1" },
-    { "src": "/(.*)", "dest": "/client/index.html" }
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/:path*" },
+    { "source": "/uploads/:path*", "destination": "/uploads/:path*" },
+    { "source": "/:path*", "destination": "/index.html" }
   ]
 }

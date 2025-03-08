@@ -11,7 +11,8 @@ require("dotenv").config();
 const app = express();
 connectToDB();
 
-app.use(express.static(path.join(__dirname, "client/")));
+// Serve static frontend files from "client" directory
+app.use(express.static(path.join(__dirname, "client")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Middleware
@@ -20,56 +21,21 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: ["https://fasial-new-fianl.vercel.app"],
-    credentials: true, // Allow cookies to be sent an d received
+    credentials: true, 
   })
 );
 
-// Connect to MongoDB
-
-// Routes
+// API Routes
 app.use("/api/", userRoute);
 
-// Serve React frontend correctly
+// ✅ Serve React frontend for all non-API routes
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api") && !req.path.startsWith("/uploads")) {
-    res.sendFile(path.resolve(__dirname, "client", "index.html"));
+    res.sendFile(path.join(__dirname, "client", "index.html"));
   } else {
-    res.status(404).json({
-      success: false,
-      message: "Not Found",
-    });
+    res.status(404).json({ success: false, message: "Not Found" });
   }
 });
-
-
-
-// Handle all other requests with a 404 Not Found
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Not Found",
-  });
-});
-
-// // ✅ Global Error Handler Middleware (Ensures the server does NOT crash)
-// app.use((err, req, res, next) => {
-//   console.error("🔥 ERROR:", err.stack || err.message);
-
-//   res.status(err.status || 500).json({
-//     success: false,
-//     message: err.message || "Internal Server Error",
-//   });
-// });
-
-// // ✅ Catch Unhandled Promise Rejections
-// process.on("unhandledRejection", (reason, promise) => {
-//   console.error("🚨 Unhandled Promise Rejection:", reason);
-// });
-
-// // ✅ Catch Uncaught Exceptions
-// process.on("uncaughtException", (err) => {
-//   console.error("💥 Uncaught Exception:", err);
-// });
 
 // Start Server
 const PORT = process.env.PORT || 3080;
